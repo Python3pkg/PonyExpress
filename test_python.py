@@ -17,7 +17,7 @@ a config value.
 """
 config = {'COUCH_CONN':'http://127.0.0.1:5984', 'COUCH_DB':'ponyexpress'}
 doc = pony.to_couchdb(config=config)
-print doc._id
+print(doc._id)
 
 
 
@@ -44,5 +44,5 @@ Otherwise do not pass a config value.
 """
 config = {'COUCH_CONN':'http://127.0.0.1:5984', 'COUCH_DB':'ponyexpress', 'SMTP_STRING':'host|25|user|pass'}
 rs = pony.send(config=config)
-print rs
+print(rs)
 

@@ -7,7 +7,7 @@ Usage::
 """
 
 import sys
-import manage
+from . import manage
 
 if __name__ == '__main__':
 	outfile = sys.stdout

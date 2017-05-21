@@ -12,12 +12,12 @@ c = {
 
 from ponyexpress.gearman_interface import PonyExpressClient
 for i in range(1):
-	print i
+	print(i)
 	pony = PonyExpressClient.from_dict(c)
 	rs = pony.to_gearman(['localhost:4730'], background=True, wait_until_complete=False)
-	print type(rs)
-	print "Status: %s" % rs.get('result')
-	print "Doc Id: %s" % rs.get('id')
-	print ""
+	print(type(rs))
+	print("Status: %s" % rs.get('result'))
+	print("Doc Id: %s" % rs.get('id'))
+	print("")
 
 rs = pony.to_gearman(['localhost:4730'])

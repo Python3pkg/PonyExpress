@@ -7,7 +7,7 @@ from string import Template
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import datetime
-import couch
+from . import couch
 import json
 
 class PonyExpressException(Exception):
@@ -95,7 +95,7 @@ class PonyExpress(object):
 		"""
 		dict = {}
 		# hack to fix older python versions (<2.7?) that dont allow unicode keywords
-		for k,v in decoded_json.iteritems(): dict[str(k)] = v
+		for k,v in decoded_json.items(): dict[str(k)] = v
 		return cls(**dict)
 	
 	def to_couchdb(self, status='queued', save=True, config=None):
@@ -191,10 +191,10 @@ class PonyExpress(object):
 			'value replacement is possible, we have a dict of replacement values'
 			# convert all keywords to strings for safe_substitute()
 			kwds = {}
-			for k,v in self._replacements.iteritems(): kwds[str(k)]=v	
+			for k,v in self._replacements.items(): kwds[str(k)]=v	
 			# perform substitutions
-			subject = unicode(Template(subject).safe_substitute(**kwds))
-			body = unicode(Template(body).safe_substitute(**kwds))
+			subject = str(Template(subject).safe_substitute(**kwds))
+			body = str(Template(body).safe_substitute(**kwds))
 
 		if self._template.format == 'text':
 			txt_body = body
@@ -221,7 +221,7 @@ class PonyExpress(object):
 		if not self._smtp_connection:
 			try:
 				self.smtp_connect((config or {}).get('SMTP_STRING', None))
-			except Exception, e:
+			except Exception as e:
 				raise PonyExpressException(self, "SMTP", str(e))
 				return dict(status=False, id=None, error="SMTP: %s" % str(e))
 
@@ -231,7 +231,7 @@ class PonyExpress(object):
 		# load the template
 		try:
 			self._template = couch.PonyExpressTemplate.get(self._id)
-		except Exception, e:
+		except Exception as e:
 			raise PonyExpressException(self, "COUCH", str(e))
 			return dict(status=False, id=None, error="COUCH: %s" % str(e))
 		
@@ -287,7 +287,7 @@ class PonyExpress(object):
 			self._message_doc.body = text_body or html_body
 			self._message_doc.save()
 			return dict(result=True, id=self._message_doc._id)
-		except Exception, e:
+		except Exception as e:
 			'if doc is open, update status to failed'
 			if self._message_doc:
 				self._message_doc.status = 'failed'

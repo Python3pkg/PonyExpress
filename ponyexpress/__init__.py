@@ -1,6 +1,6 @@
 from flask import Flask, session, redirect, url_for, request, render_template, jsonify
-import core
-import couch
+from . import core
+from . import couch
 import formencode
 import gearman
 
@@ -24,8 +24,8 @@ app = Flask(__name__)
 
 try:
 	app.config.from_envvar('PONYEXPRESS_CFG')
-except Exception, e:
-	print e
+except Exception as e:
+	print(e)
 	app.config.update(
 		DEBUG=True,
 		GEARMAN_SERVERS='localhost:4730',
@@ -60,7 +60,7 @@ def create_template():
 	"save a new template"
 	try:
 		form = TemplateForm.to_python(request.form)
-	except formencode.validators.Invalid, error:
+	except formencode.validators.Invalid as error:
 		return str(error)
 	else:
 		lc = couch.LocalTemplate(
@@ -95,11 +95,11 @@ def save_template(doc_id):
 	doc = couch.PonyExpressTemplate.get(doc_id)
 	try:
 		form = TemplateForm.to_python(request.form)
-	except formencode.validators.Invalid, error:
+	except formencode.validators.Invalid as error:
 		return str(error)
 	else:
 		doc.contents = []
-		for k,v in form.iteritems():
+		for k,v in form.items():
 			if not k == 'contents':
 				setattr(doc, k, v)
 			elif k == 'contents':

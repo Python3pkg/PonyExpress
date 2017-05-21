@@ -1,4 +1,4 @@
-from core import PonyExpress
+from .core import PonyExpress
 import gearman
 import json
 config = None
@@ -37,7 +37,7 @@ class PonyExpressClient(PonyExpress, gearman.GearmanClient):
 			# not running in background, wait for job to complete
 			status = lambda job: job.result if job.complete else None
 			rs = status(job)
-			print str(rs)
+			print(str(rs))
 			return json.loads(rs)
 		else:
 			# running in background, do not wait for job to complete
@@ -51,9 +51,9 @@ class PonyExpressClient(PonyExpress, gearman.GearmanClient):
 		try:
 			pony = PonyExpress.from_json(job.data)
 			rs = pony.send(config=config)
-			print str(rs)
+			print(str(rs))
 			return json.dumps(rs)
-		except Exception, e:
+		except Exception as e:
 			return json.dumps(dict(result=False, id=None, error=str(e)))
 		
 	@classmethod
